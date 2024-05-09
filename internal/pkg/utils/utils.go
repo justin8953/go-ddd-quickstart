@@ -8,3 +8,7 @@ func ConvertStringToInt(s string) (int, error) {
 	}
 	return strconv.Atoi(s)
 }
+
+func ConvertBytesToString(b []byte) string {
+	return string(b)
+}

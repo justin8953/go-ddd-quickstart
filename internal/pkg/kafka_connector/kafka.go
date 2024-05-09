@@ -21,6 +21,17 @@ func NewKafkaService() *KafkaService {
 	}
 }
 
+func (s *KafkaService) NewKafkaConsumer(topic string) *KafkaEventConsumer {
+	return &KafkaEventConsumer{
+		topic: topic,
+		reader: kafka.NewReader(kafka.ReaderConfig{
+			Brokers: s.Address,
+			Topic:   topic,
+			GroupID: "group_id",
+		}),
+	}
+}
+
 func (s *KafkaService) NewKafkaHandler(topic string) *KafkaEventHandler {
 	return &KafkaEventHandler{
 		topic: topic,
