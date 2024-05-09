@@ -13,6 +13,11 @@ type OrderCreated struct {
 func (e OrderCreated) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
+
+func (e OrderCreated) EventId() string {
+	return uuid.New().String()
+}
+
 func (e OrderCreated) Name() string {
 	return "event.order.created"
 }

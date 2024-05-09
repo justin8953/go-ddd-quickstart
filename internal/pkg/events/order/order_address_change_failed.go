@@ -14,6 +14,10 @@ func (e OrderDeliveryAddressChangeFailed) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
 
+func (e OrderDeliveryAddressChangeFailed) EventId() string {
+	return e.OrderID().String()
+}
+
 func (e OrderDeliveryAddressChangeFailed) Name() string {
 	return "event.order.address.change.failed"
 }

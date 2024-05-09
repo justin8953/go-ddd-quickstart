@@ -13,6 +13,11 @@ type EmailSendFailed struct {
 func (e EmailSendFailed) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
+
+func (e EmailSendFailed) EventId() string {
+	return e.EmailID().String()
+}
+
 func (e EmailSendFailed) Name() string {
 	return "event.email.sent"
 }

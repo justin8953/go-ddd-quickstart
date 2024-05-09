@@ -13,6 +13,11 @@ type OrderDelivered struct {
 func (e OrderDelivered) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
+
+func (e OrderDelivered) EventId() string {
+	return e.OrderID().String()
+}
+
 func (e OrderDelivered) Name() string {
 	return "event.order.delivery.success"
 }

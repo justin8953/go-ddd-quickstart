@@ -14,6 +14,10 @@ func (e OrderDeliveryFailed) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
 
+func (e OrderDeliveryFailed) EventId() string {
+	return e.OrderID().String()
+}
+
 func (e OrderDeliveryFailed) Name() string {
 	return "event.order.delivery.failed"
 }

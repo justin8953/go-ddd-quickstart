@@ -13,6 +13,11 @@ type EmailSent struct {
 func (e EmailSent) IsAsynchronous() bool {
 	return os.Getenv("ASYNC") == "true"
 }
+
+func (e EmailSent) EventId() string {
+	return e.EmailID().String()
+}
+
 func (e EmailSent) Name() string {
 	return "event.email.sent"
 }
