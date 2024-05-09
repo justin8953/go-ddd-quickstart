@@ -3,7 +3,6 @@ package db
 import "github.com/google/uuid"
 
 type DbRepo interface {
-	Connect() error
 	Create(item *IItem) (*IItem, error)
 	Update(id uuid.UUID, item *IItem) (*IItem, error)
 	Delete(id uuid.UUID) error
