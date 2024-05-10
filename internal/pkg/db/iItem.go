@@ -8,6 +8,6 @@ import (
 
 type IItem interface {
 	ItemID() uuid.UUID
-	CreateedAt() time.Time
+	CreatedAt() time.Time
 	UpdatedAt() time.Time
 }
