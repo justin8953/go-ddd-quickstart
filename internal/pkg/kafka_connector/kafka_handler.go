@@ -6,9 +6,10 @@ import (
 	"errors"
 	"go-ddd-quickstart/internal/pkg/events"
 	"go-ddd-quickstart/internal/pkg/utils"
-	"log"
 	"os"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 
 	kafka "github.com/segmentio/kafka-go"
 )
@@ -34,7 +35,7 @@ func (e *KafkaEventHandler) Notify(event events.IEvent) {
 		defer cancel()
 		body, err := json.Marshal(event)
 		if err != nil {
-			log.Fatalf("unexpected error %v", err)
+			log.Errorf("failed to marshal event %v", event)
 		}
 		message := kafka.Message{
 			Key:   []byte(event.EventId()),
@@ -48,12 +49,12 @@ func (e *KafkaEventHandler) Notify(event events.IEvent) {
 		}
 
 		if err != nil {
-			log.Fatalf("unexpected error %v", err)
+			log.Errorf("unexpected error to write meesage %v", err)
 		}
 		break
 	}
 
 	if err := w.Close(); err != nil {
-		log.Fatal("failed to close writer:", err)
+		log.Error("failed to close writer:", err)
 	}
 }
