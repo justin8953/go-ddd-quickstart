@@ -43,7 +43,7 @@ func (suite *OrderRepoTestSuite) TestCreate() {
 	}
 	payload := dbRecord.OrderItem{
 		IsDispatched: true,
-		Address: dbRecord.Address{dto.Address{
+		Address: dbRecord.Address{Address: dto.Address{
 			Address1: "742 Evergreen Terrace",
 			Address2: "Apt 123",
 			City:     "Springfield",
