@@ -72,5 +72,6 @@ func (r *OrderRepository) Retrieve(id string) (*dbRecord.OrderItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	return item.(*dbRecord.OrderItem), nil
+	orderItem := item.(dbRecord.OrderItem)
+	return &orderItem, nil
 }
