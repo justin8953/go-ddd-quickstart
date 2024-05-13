@@ -6,8 +6,7 @@ on:
 jobs:
   edit_pr_message:
     permissions:
-      id-token: write
-      contents: read
+      pull-requests: write
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
