@@ -115,6 +115,39 @@ func (suite *OrderRepoTestSuite) TestDelete() {
 	assert.Nil(t, err)
 }
 
+func (suite *OrderRepoTestSuite) TestList() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	actualItem := dbRecord.OrderItem{
+		OrderID:      uuid,
+		IsDispatched: true,
+		Address: dbRecord.Address{Address: dto.Address{
+			Address1: "742 Evergreen Terrace",
+			Address2: "Apt 123",
+			City:     "Springfield",
+			State:    "IL",
+			ZipCode:  "12345",
+			Country:  "USA",
+		}},
+	}
+	mockDb.EXPECT().List(gomock.Any()).Return([]db.IItem{actualItem}, nil)
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+
+	expectedItems, err := repo.List(map[string]interface{}{})
+	if err != nil {
+		t.Errorf("Error creating order: %v", err)
+	}
+	assert.Equal(t, len(expectedItems), 1)
+	assert.Equal(t, expectedItems[0].OrderID, uuid)
+	assert.Equal(t, expectedItems[0].IsDispatched, true)
+
+}
+
 func (suite *OrderRepoTestSuite) TestRetrieve() {
 	t := suite.T()
 	ctrl := gomock.NewController(t)

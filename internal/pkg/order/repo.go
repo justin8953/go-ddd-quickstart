@@ -63,7 +63,8 @@ func (r *OrderRepository) List(filter map[string]interface{}) ([]dbRecord.OrderI
 	}
 	var items []dbRecord.OrderItem
 	for _, item := range cursor {
-		items = append(items, *item.(*dbRecord.OrderItem))
+		orderItem := item.(dbRecord.OrderItem)
+		items = append(items, orderItem)
 	}
 	return items, nil
 }
