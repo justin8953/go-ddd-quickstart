@@ -34,7 +34,7 @@ func (r *OrderRepository) Create(item dbRecord.OrderItem) (*dbRecord.OrderItem, 
 	return &newOrderItem, nil
 }
 
-func (r *OrderRepository) Update(id string, item *dbRecord.OrderItem) (*dbRecord.OrderItem, error) {
+func (r *OrderRepository) Update(id string, item dbRecord.OrderItem) (*dbRecord.OrderItem, error) {
 	item.UpdatedTimestamp = time.Now()
 	err := r.Repo.Update(id, item)
 	if err != nil {
@@ -44,7 +44,8 @@ func (r *OrderRepository) Update(id string, item *dbRecord.OrderItem) (*dbRecord
 	if err != nil {
 		return nil, err
 	}
-	return updateItem.(*dbRecord.OrderItem), nil
+	updateOrderItem := updateItem.(dbRecord.OrderItem)
+	return &updateOrderItem, nil
 }
 
 func (r *OrderRepository) Delete(id string) error {
