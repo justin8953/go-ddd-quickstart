@@ -1,14 +1,14 @@
 package events
 
 type EventPublisher struct {
-	handlers map[string][]EventHandler
+	Handlers map[string][]EventHandler
 }
 
 func (e *EventPublisher) Subscribe(handler EventHandler, events ...IEvent) {
 	for _, event := range events {
-		handlers := e.handlers[event.Name()]
+		handlers := e.Handlers[event.Name()]
 		handlers = append(handlers, handler)
-		e.handlers[event.Name()] = handlers
+		e.Handlers[event.Name()] = handlers
 	}
 }
 
@@ -21,7 +21,7 @@ func (e *EventPublisher) Notify(event IEvent) {
 }
 
 func (e *EventPublisher) notify(event IEvent) {
-	for _, handler := range e.handlers[event.Name()] {
+	for _, handler := range e.Handlers[event.Name()] {
 		handler.Notify(event)
 	}
 }

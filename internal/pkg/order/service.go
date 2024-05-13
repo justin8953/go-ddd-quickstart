@@ -19,9 +19,6 @@ func (s *OrderService) Create(order *dbRecord.OrderItem) (*dbRecord.OrderItem, e
 	if err != nil {
 		return nil, err
 	}
-	//
-	// update Adrress in DB
-	//
 	s.publisher.Notify(orderEvents.OrderCreated{
 		OrderId: result.ItemID(),
 	})
@@ -38,6 +35,7 @@ func (s *OrderService) ChangeAddress(userID uuid.UUID, record *dbRecord.OrderIte
 		Country:  address.Country,
 		ZipCode:  address.ZipCode,
 	}
+
 	order := orderDto.Order{
 		Id:              record.ItemID(),
 		UserID:          userID,
