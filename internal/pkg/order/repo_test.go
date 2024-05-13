@@ -98,6 +98,23 @@ func (suite *OrderRepoTestSuite) TestUpdate() {
 	assert.Equal(t, expectedItem.UpdatedTimestamp, updatedTimestamp)
 }
 
+func (suite *OrderRepoTestSuite) TestDelete() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	mockDb.EXPECT().Delete(uuid.String()).DoAndReturn(func(id string) error {
+		return nil
+	})
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+
+	err := repo.Delete(uuid.String())
+	assert.Nil(t, err)
+}
+
 func (suite *OrderRepoTestSuite) TestRetrieve() {
 	t := suite.T()
 	ctrl := gomock.NewController(t)
