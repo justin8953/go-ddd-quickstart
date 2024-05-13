@@ -19,7 +19,7 @@ jobs:
       - name: Edit PR message
         run: |
           #  check if PR message is empty    
-          if [ -z "${{ github.event.pull_request.body }}" ]; then
+          if [[ -z "${{ github.event.pull_request.body }}" ]]; then
             echo "PR message is empty"
             echo "Adding more message to PR message"
             echo "This is a PR message" >> ${{ github.event.pull_request.body }}
