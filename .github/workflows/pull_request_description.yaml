@@ -11,11 +11,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Retrieve PR number
-        id: pr_number
+      - name: Print PR number
         run: echo "PR number is ${{ github.event.pull_request.number }}"
       - name: Edit PR message
         run: |
           if [[ -z "${{ github.event.pull_request.body }}" ]]; then
-            gh pr edit ${{ steps.pr_number.outputs.pr_number }} --body "Please provide a description for this PR."
+            gh pr edit ${{ github.event.pull_request.number }} --body "Please provide a description for this PR."
           fi
