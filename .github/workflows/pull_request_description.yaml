@@ -1,0 +1,29 @@
+name: Edit PR message
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  edit_pr_message:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Validate PR message
+        run: |
+          echo "Validating PR message"
+          echo "PR title: ${{ github.event.pull_request.title }}"
+          echo "PR body: ${{ github.event.pull_request.body }}"
+      - name: Edit PR message
+        run: |
+          #  check if PR message is empty    
+          if [ -z "${{ github.event.pull_request.body }}" ]; then
+            echo "PR message is empty"
+            echo "Adding more message to PR message"
+            echo "This is a PR message" >> ${{ github.event.pull_request.body }}
+          else
+            echo "PR message is not empty"
+            echo "PR message: ${{ github.event.pull_request.body }}"
+          fi
