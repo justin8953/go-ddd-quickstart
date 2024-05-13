@@ -1,11 +1,9 @@
 package db
 
-import "github.com/google/uuid"
-
 type DbRepo interface {
-	Create(item *IItem) (*IItem, error)
-	Update(id uuid.UUID, item *IItem) (*IItem, error)
-	Delete(id uuid.UUID) error
+	Create(item IItem) (string, error)
+	Update(id string, item IItem) error
+	Delete(id string) error
 	List(filter map[string]interface{}) ([]IItem, error)
-	Retrieve(id uuid.UUID) (*IItem, error)
+	Retrieve(id string) (IItem, error)
 }
