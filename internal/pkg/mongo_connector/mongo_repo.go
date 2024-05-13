@@ -4,7 +4,6 @@ import (
 	"context"
 	"go-ddd-quickstart/internal/pkg/db"
 
-	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -19,14 +18,14 @@ func (repo *MongoRepo) Create(item db.IItem) (string, error) {
 	}
 	return result.InsertedID.(string), nil
 }
-func (repo *MongoRepo) Update(id uuid.UUID, item db.IItem) error {
+func (repo *MongoRepo) Update(id string, item db.IItem) error {
 	_, err := repo.Collection.UpdateByID(context.TODO(), id, item)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (repo *MongoRepo) Delete(id uuid.UUID) error {
+func (repo *MongoRepo) Delete(id string) error {
 	_, err := repo.Collection.DeleteOne(context.TODO(), id)
 	if err != nil {
 		return err
@@ -49,7 +48,7 @@ func (repo *MongoRepo) List(filter map[string]interface{}) ([]db.IItem, error) {
 	}
 	return items, nil
 }
-func (repo *MongoRepo) Retrieve(id uuid.UUID) (db.IItem, error) {
+func (repo *MongoRepo) Retrieve(id string) (db.IItem, error) {
 	var item db.IItem
 	err := repo.Collection.FindOne(context.TODO(), id).Decode(&item)
 	if err != nil {

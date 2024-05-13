@@ -15,7 +15,7 @@ type OrderService struct {
 }
 
 func (s *OrderService) Create(order *dbRecord.OrderItem) (*dbRecord.OrderItem, error) {
-	result, err := s.repository.Create(order)
+	result, err := s.repository.Create(*order)
 	if err != nil {
 		return nil, err
 	}
