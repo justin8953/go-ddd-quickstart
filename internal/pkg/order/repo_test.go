@@ -52,13 +52,43 @@ func (suite *OrderRepoTestSuite) TestCreate() {
 			Country:  "USA",
 		}},
 	}
-	newItem, err := repo.Create(payload)
+	expectedItem, err := repo.Create(payload)
 	if err != nil {
 		t.Errorf("Error creating order: %v", err)
 	}
-	assert.Equal(t, newItem.OrderID, uuid)
-	assert.Equal(t, newItem.IsDispatched, true)
+	assert.Equal(t, expectedItem.OrderID, uuid)
+	assert.Equal(t, expectedItem.IsDispatched, true)
+}
 
+func (suite *OrderRepoTestSuite) TestRetrieve() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	actualItem := dbRecord.OrderItem{
+		OrderID:      uuid,
+		IsDispatched: true,
+		Address: dbRecord.Address{Address: dto.Address{
+			Address1: "742 Evergreen Terrace",
+			Address2: "Apt 123",
+			City:     "Springfield",
+			State:    "IL",
+			ZipCode:  "12345",
+			Country:  "USA",
+		}},
+	}
+	mockDb.EXPECT().Retrieve(uuid.String()).Return(actualItem, nil)
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+
+	expectedItem, err := repo.Retrieve(uuid.String())
+	if err != nil {
+		t.Errorf("Error creating order: %v", err)
+	}
+	assert.Equal(t, expectedItem.OrderID, uuid)
+	assert.Equal(t, expectedItem.IsDispatched, true)
 }
 
 // In order for 'go test' to run this suite, we need to create
