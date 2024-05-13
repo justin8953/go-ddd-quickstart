@@ -5,6 +5,7 @@ import (
 	dbMock "go-ddd-quickstart/internal/pkg/db/mock"
 	"go-ddd-quickstart/internal/pkg/dto"
 	dbRecord "go-ddd-quickstart/internal/pkg/order/db"
+	"time"
 
 	"testing"
 
@@ -58,6 +59,93 @@ func (suite *OrderRepoTestSuite) TestCreate() {
 	}
 	assert.Equal(t, expectedItem.OrderID, uuid)
 	assert.Equal(t, expectedItem.IsDispatched, true)
+}
+
+func (suite *OrderRepoTestSuite) TestUpdate() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	var updatedTimestamp time.Time
+	mockDb.EXPECT().Update(uuid.String(), gomock.Any()).DoAndReturn(func(id string, item db.IItem) error {
+		orderItem := item.(dbRecord.OrderItem)
+		orderItem.OrderID = uuid
+		updatedTimestamp = orderItem.UpdatedTimestamp
+		mockDb.EXPECT().Retrieve(uuid.String()).Return(orderItem, nil)
+		return nil
+	})
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+	payload := dbRecord.OrderItem{
+		IsDispatched: false,
+		Address: dbRecord.Address{Address: dto.Address{
+			Address1: "742 Evergreen Terrace",
+			Address2: "Apt 123",
+			City:     "Springfield",
+			State:    "IL",
+			ZipCode:  "12345",
+			Country:  "USA",
+		}},
+	}
+	expectedItem, err := repo.Update(uuid.String(), payload)
+	if err != nil {
+		t.Errorf("Error creating order: %v", err)
+	}
+	assert.Equal(t, expectedItem.OrderID, uuid)
+	assert.Equal(t, expectedItem.IsDispatched, false)
+	assert.Equal(t, expectedItem.UpdatedTimestamp, updatedTimestamp)
+}
+
+func (suite *OrderRepoTestSuite) TestDelete() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	mockDb.EXPECT().Delete(uuid.String()).DoAndReturn(func(id string) error {
+		return nil
+	})
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+
+	err := repo.Delete(uuid.String())
+	assert.Nil(t, err)
+}
+
+func (suite *OrderRepoTestSuite) TestList() {
+	t := suite.T()
+	ctrl := gomock.NewController(t)
+	mockDb := dbMock.NewMockDbRepo(ctrl)
+	uuid := uuid.New()
+	actualItem := dbRecord.OrderItem{
+		OrderID:      uuid,
+		IsDispatched: true,
+		Address: dbRecord.Address{Address: dto.Address{
+			Address1: "742 Evergreen Terrace",
+			Address2: "Apt 123",
+			City:     "Springfield",
+			State:    "IL",
+			ZipCode:  "12345",
+			Country:  "USA",
+		}},
+	}
+	mockDb.EXPECT().List(gomock.Any()).Return([]db.IItem{actualItem}, nil)
+
+	repo := OrderRepository{
+		Repo: mockDb,
+	}
+
+	expectedItems, err := repo.List(map[string]interface{}{})
+	if err != nil {
+		t.Errorf("Error creating order: %v", err)
+	}
+	assert.Equal(t, len(expectedItems), 1)
+	assert.Equal(t, expectedItems[0].OrderID, uuid)
+	assert.Equal(t, expectedItems[0].IsDispatched, true)
+
 }
 
 func (suite *OrderRepoTestSuite) TestRetrieve() {
