@@ -1,9 +1,14 @@
 name: pull request title checker
 on:
   pull_request_target:
+    branches:
+      - main
     types:
       - opened
       - edited
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
 jobs:
   pr_check:
     runs-on: ubuntu-latest
