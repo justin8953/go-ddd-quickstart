@@ -9,7 +9,6 @@ on:
       - main
 jobs:
   code-scan:
-    name: GoKart scanner
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,9 +18,14 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
-    - name: run GoKart
-      uses: kitabisa/gokart-action@v1.0.0
+    - name: run security Scanner
+      uses: securego/gosec@master
       with:
-        globalsTainted: true
+        # we let the report trigger content trigger a failure using the GitHub Security features.
+        args: '-no-fail -fmt sarif -out results.sarif ./...'
     - name: Upload results
       uses: github/codeql-action/upload-sarif@v3
+      with:
+        # Path to SARIF file relative to the root of the repository
+        sarif_file: results.sarif
+
