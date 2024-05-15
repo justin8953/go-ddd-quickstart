@@ -1,0 +1,15 @@
+{
+    "LABEL": {
+      "name": "title needs formatting",
+      "color": "EEEEEE"
+    },
+    "CHECKS": {
+      "regexp": "(^(fix|feat|docs|style|refactor|perf|test|chore|revert):\\s.*$)",
+      "regexpFlags": "i"
+    },
+    "MESSAGES": {
+      "success": "Valid title",
+      "failure": "Invalid title. Please follow the title format",
+      "notice": ""
+    }
+  }
