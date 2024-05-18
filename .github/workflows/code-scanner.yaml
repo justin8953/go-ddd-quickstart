@@ -11,8 +11,10 @@ jobs:
   code-scan:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       security-events: write
+      # only required for workflows in private repositories
+      actions: read
+      contents: read
 
     steps:
     - name: checkout
@@ -28,4 +30,5 @@ jobs:
       with:
         # Path to SARIF file relative to the root of the repository
         sarif_file: results.sarif
+        category: go-code-scanning
 
